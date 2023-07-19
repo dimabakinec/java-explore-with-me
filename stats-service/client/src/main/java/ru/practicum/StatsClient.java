@@ -27,20 +27,21 @@ public class StatsClient {
         this.client = WebClient.create(baseUrl);
     }
 
-    public ResponseEntity<List<ViewStats>> getStats(String start, String end, List<String> uris, Boolean unique) {
+    public ResponseEntity<List<ViewStats>> getStats(String start, String end, List<String> urls, Boolean unique) {
+        String paramsUri = String.join(",", urls);
         return this.client.get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/stats")
                         .queryParam("start", start)
                         .queryParam("end", end)
-                        .queryParam("uris", uris)
+                        .queryParam("uris", paramsUri)
                         .queryParam("unique", unique)
                         .build())
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .toEntityList(ViewStats.class)
                 .doOnNext(c -> log.info("Get stats with param: start date {}, end date {}, uris {}, unique {}",
-                        start, end, uris, unique))
+                        start, end, paramsUri, unique))
                 .block();
     }
 
