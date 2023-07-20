@@ -22,6 +22,8 @@ import static ru.practicum.dto.Constant.DATE_PATTERN;
 @Slf4j
 public class StatController {
 
+    private final StatService service;
+
     @PostMapping("/hit")
     @ResponseStatus(value = HttpStatus.CREATED, reason = "Информация сохранена")
     public void saveEndpointHit(@Valid @RequestBody EndpointHit dto) {
@@ -48,8 +50,6 @@ public class StatController {
         log.info("Get stats with parameters start date {} end date {} urls list {} unique {}", start, end, uris, unique);
         return service.getStats(start, end, uris, unique);
     }
-
-    private final StatService service;
 
     private void validateDate(LocalDateTime start, LocalDateTime end) {
         if (start.isAfter(end)) {
