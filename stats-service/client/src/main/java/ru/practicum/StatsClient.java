@@ -19,11 +19,9 @@ import java.util.List;
 @PropertySource(value = {"classpath:statsClient.properties"})
 public class StatsClient {
 
-    @Value("${stats.server.url}")
-    private String baseUrl;
     private final WebClient client;
 
-    public StatsClient() {
+    public StatsClient(@Value("${stats.server.url}") String baseUrl) {
         this.client = WebClient.create(baseUrl);
     }
 
@@ -46,15 +44,14 @@ public class StatsClient {
     }
 
     public void saveStats(String app, String uri, String ip, LocalDateTime timestamp) {
-        final EndpointHit endpointHit = new EndpointHit(app, uri, ip, timestamp);
 
         this.client.post()
                 .uri("/hit")
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(endpointHit, EndpointHit.class)
+                .bodyValue(new EndpointHit(app, uri, ip, timestamp))
                 .retrieve()
                 .toBodilessEntity()
-                .doOnNext(c -> log.info("Save stats {}", endpointHit))
+                .doOnNext(c -> log.info("Save stats"))
                 .block();
     }
 }
