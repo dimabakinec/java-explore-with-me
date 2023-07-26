@@ -59,6 +59,11 @@ public class PublicEventController {
     ) {
         SortEvents sortParam = SortEvents.from(sort)
                 .orElseThrow(() -> new ValidationException("Unknown param sort: " + sort));
+        log.debug("Get events with parameters: text {}, categories {}, paid {}, rangeStart {}, rangeEnd {}, " +
+                        "onlyAvailable {}, sort {}, from {}, size {}", text, categories, paid, rangeStart, rangeEnd,
+                onlyAvailable, sort, from, size);
+        log.debug("client ip: {}", request.getRemoteAddr());
+        log.debug("endpoint path: {}", request.getRequestURI());
         return eventService.getEventsPublic(text, categories, paid, rangeStart, rangeEnd,
                 onlyAvailable, sortParam, from, size, request);
     }
@@ -67,6 +72,9 @@ public class PublicEventController {
     @ResponseStatus(value = HttpStatus.OK)
     public EventFullDto getEventByIdPublic(@PathVariable(value = "id") Long id,
                                            HttpServletRequest request) {
+        log.debug("Get event by Id {}", id);
+        log.debug("client ip: {}", request.getRemoteAddr());
+        log.debug("endpoint path: {}", request.getRequestURI());
         return eventService.getEventByIdPublic(id, request);
     }
 }

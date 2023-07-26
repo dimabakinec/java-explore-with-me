@@ -213,7 +213,7 @@ public class EventServiceImpl implements EventService {
     public List<EventShortDto> getAllEventsByUserId(Long userId, int from, int size) {
         log.info(GET_MODELS.getMessage());
         return eventRepository.findAllWithInitiatorByInitiatorId(userId, new PaginationSetup(from, size,
-                Sort.unsorted())).stream()
+                        Sort.unsorted())).stream()
                 .map(EventMapper::mapToEventShortDto)
                 .collect(Collectors.toList());
     }
@@ -317,7 +317,6 @@ public class EventServiceImpl implements EventService {
         if (rangeEnd != null) {
             events = getEventsBeforeRangeEnd(events, rangeEnd);
         }
-
         List<EventShortDto> result = events.stream()
                 .map(EventMapper::mapToEventShortDto)
                 .collect(Collectors.toList());
@@ -330,7 +329,7 @@ public class EventServiceImpl implements EventService {
         log.info(SAVE_STATS.getMessage());
 
         if (sort.equals(VIEWS)) { // если сортировка по количеству просмотров
-           return result.stream()
+            return result.stream()
                     .sorted(Comparator.comparingLong(EventShortDto::getViews))
                     .collect(Collectors.toList());
         }
