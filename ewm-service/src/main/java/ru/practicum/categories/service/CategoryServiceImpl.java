@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-//import ru.practicum.events.repository.EventRepository;
 import ru.practicum.util.PaginationSetup;
 import ru.practicum.categories.dto.CategoryDto;
 import ru.practicum.categories.dto.CategoryMapper;
@@ -28,7 +27,6 @@ import static ru.practicum.categories.dto.CategoryMapper.toCategoryDto;
 public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
-//    private final EventRepository eventRepository;
 
     @Transactional
     @Override
@@ -41,18 +39,14 @@ public class CategoryServiceImpl implements CategoryService {
     @Transactional
     @Override
     public void deleteCategoryById(Long id) {
-        if (categoryRepository.existsById(id)) {
+        categoryRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Category with id=" + id + " was not found"));
+        try {
+            categoryRepository.deleteById(id);
+        } catch (Exception e) {
             throw new ValidateException("The category is not empty");
         }
-        categoryRepository.deleteById(id);
-//        categoryRepository.findById(id)
-//                .orElseThrow(() -> new NotFoundException("Category with id=" + id + " was not found"));
-//        try {
-//            categoryRepository.deleteById(id);
-//        } catch (Exception e) {
-//            throw new ValidateException("The category is not empty");
-//        }
-//        log.info(DELETE_MODEL.getMessage(), id);
+        log.info(DELETE_MODEL.getMessage(), id);
     }
 
     @Transactional
