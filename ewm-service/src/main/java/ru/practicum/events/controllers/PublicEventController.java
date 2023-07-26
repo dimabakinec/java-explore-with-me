@@ -60,11 +60,11 @@ public class PublicEventController {
         SortEvents sortParam = SortEvents.from(sort)
                 .orElseThrow(() -> new ValidationException("Unknown param sort: " + sort));
 
-        log.info("Get events with parameters: text {}, categories {}, paid {}, rangeStart {}, rangeEnd {}, " +
-                "onlyAvailable {}, sort {}, from {}, size {}", text, categories, paid, rangeStart, rangeEnd,
-                onlyAvailable, sort, from, size);
-        log.info("client ip: {}", request.getRemoteAddr());
-        log.info("endpoint path: {}", request.getRequestURI());
+//        log.info("Get events with parameters: text {}, categories {}, paid {}, rangeStart {}, rangeEnd {}, " +
+//                "onlyAvailable {}, sort {}, from {}, size {}", text, categories, paid, rangeStart, rangeEnd,
+//                onlyAvailable, sort, from, size);
+//        log.info("client ip: {}", request.getRemoteAddr());
+//        log.info("endpoint path: {}", request.getRequestURI());
         return eventService.getEventsPublic(text, categories, paid, rangeStart, rangeEnd,
                 onlyAvailable, sortParam, from, size, request);
     }
@@ -73,9 +73,9 @@ public class PublicEventController {
     @ResponseStatus(value = HttpStatus.OK)
     public EventFullDto getEventByIdPublic(@PathVariable(value = "id") Long id,
                                            HttpServletRequest request) {
-        log.info("Get event by Id {}", id);
-        log.info("client ip: {}", request.getRemoteAddr());
-        log.info("endpoint path: {}", request.getRequestURI());
+//        log.info("Get event by Id {}", id);
+//        log.info("client ip: {}", request.getRemoteAddr());
+//        log.info("endpoint path: {}", request.getRequestURI());
         return eventService.getEventByIdPublic(id, request);
     }
 }
