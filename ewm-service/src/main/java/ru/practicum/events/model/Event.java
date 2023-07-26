@@ -1,6 +1,5 @@
 package ru.practicum.events.model;
 
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -21,7 +20,7 @@ import static ru.practicum.events.EventState.PENDING;
 @ToString
 @Getter
 @Setter
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+//@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @DynamicUpdate
 public class Event {
 
