@@ -58,8 +58,8 @@ public class Event {
     // Ограничение на количество участников. Значение 0 - означает отсутствие ограничения. Default: 0;
     private Integer participantLimit;
 
-//    @Column(name = "confirmed_requests")
-//    private Integer confirmedRequests = 0; // Количество одобренных заявок на участие в данном событии;
+    @Column(name = "confirmed_requests")
+    private Integer confirmedRequests = 0; // Количество одобренных заявок на участие в данном событии;
 
     /* Нужна ли пре-модерация заявок на участие. Если true, то все заявки будут ожидать подтверждения инициатором события.
        Если false - то будут подтверждаться автоматически. Default: true*/
