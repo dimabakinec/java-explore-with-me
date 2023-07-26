@@ -12,6 +12,7 @@ import ru.practicum.categories.model.Category;
 import ru.practicum.categories.repository.CategoryRepository;
 import ru.practicum.handler.ValidateException;
 import ru.practicum.handler.NotFoundException;
+import ru.practicum.events.repository.EventRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,6 +28,7 @@ import static ru.practicum.categories.dto.CategoryMapper.toCategoryDto;
 public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
+    private final EventRepository eventRepository;
 
     @Transactional
     @Override
@@ -39,14 +41,19 @@ public class CategoryServiceImpl implements CategoryService {
     @Transactional
     @Override
     public void deleteCategoryById(Long id) {
-        categoryRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Category with id=" + id + " was not found"));
-        try {
-            categoryRepository.deleteById(id);
-        } catch (Exception e) {
-            throw new ValidateException("The category is not empty");
+        Category category = categoryRepository.findById(id).orElseThrow(() -> new NotFoundException("Category not found"));
+        if (eventRepository.countByCategoryId(id) > 0) {
+            throw new ValidateException("Cannot delete category with linked events");
         }
-        log.info(DELETE_MODEL.getMessage(), id);
+        categoryRepository.delete(category);
+//        categoryRepository.findById(id)
+//                .orElseThrow(() -> new NotFoundException("Category with id=" + id + " was not found"));
+//        try {
+//            categoryRepository.deleteById(id);
+//        } catch (Exception e) {
+//            throw new ValidateException("The category is not empty");
+//        }
+//        log.info(DELETE_MODEL.getMessage(), id);
     }
 
     @Transactional

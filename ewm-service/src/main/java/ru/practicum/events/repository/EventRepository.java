@@ -14,6 +14,8 @@ import java.util.Set;
 
 public interface EventRepository extends JpaRepository<Event, Long> {
 
+    Long countByCategoryId(Long id);
+
     @Query(
             "select e " +
             "from Event AS e " +
