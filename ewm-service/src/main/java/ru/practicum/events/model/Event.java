@@ -20,7 +20,6 @@ import static ru.practicum.events.EventState.PENDING;
 @ToString
 @Getter
 @Setter
-//@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @DynamicUpdate
 public class Event {
 

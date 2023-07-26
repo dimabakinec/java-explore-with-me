@@ -14,7 +14,6 @@ import java.util.List;
 @ToString
 @Getter
 @Setter
-//@EqualsAndHashCode
 @DynamicUpdate
 public class Compilation {
 
