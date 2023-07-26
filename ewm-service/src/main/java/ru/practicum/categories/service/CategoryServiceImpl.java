@@ -46,14 +46,6 @@ public class CategoryServiceImpl implements CategoryService {
             throw new ValidateException("Cannot delete category with linked events");
         }
         categoryRepository.delete(category);
-//        categoryRepository.findById(id)
-//                .orElseThrow(() -> new NotFoundException("Category with id=" + id + " was not found"));
-//        try {
-//            categoryRepository.deleteById(id);
-//        } catch (Exception e) {
-//            throw new ValidateException("The category is not empty");
-//        }
-//        log.info(DELETE_MODEL.getMessage(), id);
     }
 
     @Transactional
