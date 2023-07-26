@@ -33,7 +33,7 @@ public class EventFullDto {
     private EventState state; // Список состояний жизненного цикла события;
 
     @JsonUnwrapped
-    protected static AdditionalEventInformation eventInformation;
+    public AdditionalEventInformation eventInformation;
 
     @Getter
     @Setter
