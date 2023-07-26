@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS events (
   location_lon FLOAT NOT NULL,
   paid boolean NOT NULL DEFAULT false,
   participant_limit int NOT NULL DEFAULT 0,
---  confirmed_requests int,
+  confirmed_requests int,
   request_moderation boolean NOT NULL DEFAULT true,
   title varchar(120) NOT NULL,
   initiator_id bigint NOT NULL REFERENCES users (id) ON DELETE CASCADE,
