@@ -212,7 +212,7 @@ public class EventServiceImpl implements EventService {
     @Override
     public List<EventShortDto> getAllEventsByUserId(Long userId, int from, int size) {
         log.info(GET_MODELS.getMessage());
-        return eventRepository.findAllWithInitiatorByInitiatorId(userId, new PaginationSetup(from, size,
+        return eventRepository.findAllWithInitiatorByInitiator_Id(userId, new PaginationSetup(from, size,
                         Sort.unsorted())).stream()
                 .map(EventMapper::mapToEventShortDto)
                 .collect(Collectors.toList());
