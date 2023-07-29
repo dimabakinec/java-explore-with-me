@@ -16,16 +16,6 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
     Long countByCategoryId(Long id);
 
-//    @Query(
-//            "select e " +
-//            "from Event AS e " +
-//            "JOIN FETCH e.initiator " +
-//            "JOIN FETCH e.category " +
-//            "where e.initiator.id = :userId"
-//    )
-
-//    List<Event> findByInitiator_Id(Long userId);
-
     List<Event> findAllWithInitiatorByInitiator_Id(Long userId, PaginationSetup paginationSetup);
 
     Optional<Event> findByIdAndInitiatorId(Long eventId, Long initiatorId);
