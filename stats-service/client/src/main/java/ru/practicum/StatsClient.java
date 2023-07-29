@@ -43,12 +43,12 @@ public class StatsClient {
                 .block();
     }
 
-    public void saveStats(String app, String uri, String ip, LocalDateTime timestamp) {
+    public void saveStats(String app, String url, String ip, LocalDateTime timestamp) {
 
         this.client.post()
                 .uri("/hit")
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(new EndpointHit(app, uri, ip, timestamp))
+                .bodyValue(new EndpointHit(app, url, ip, timestamp))
                 .retrieve()
                 .toBodilessEntity()
                 .doOnNext(c -> log.info("Save stats"))

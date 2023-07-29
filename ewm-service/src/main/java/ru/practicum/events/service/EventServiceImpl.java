@@ -23,7 +23,6 @@ import ru.practicum.handler.ValidateDateException;
 import ru.practicum.users.model.User;
 import ru.practicum.users.repository.UserRepository;
 
-import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -296,7 +295,7 @@ public class EventServiceImpl implements EventService {
                                                SortEvents sort,
                                                Integer from,
                                                Integer size,
-                                               HttpServletRequest request) {
+                                               String url, String ip) {
         log.info(GET_MODELS.getMessage());
         validDateParam(rangeStart, rangeEnd); // проверяем даты
         PaginationSetup pageable = new PaginationSetup(from, size, Sort.unsorted()); // сортировка
@@ -325,7 +324,7 @@ public class EventServiceImpl implements EventService {
         saveViewInEvent(result); // формируем список result с просмотрами
 
         // информацию о том, что по этому эндпоинту был осуществлен и обработан запрос, нужно сохранить в сервисе статистики
-        statsClient.saveStats(APP, request.getRequestURI(), request.getRemoteAddr(), LocalDateTime.now());
+        statsClient.saveStats(APP, url, ip, LocalDateTime.now());
         log.info(SAVE_STATS.getMessage());
 
         if (sort.equals(VIEWS)) { // если сортировка по количеству просмотров
@@ -337,7 +336,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public EventFullDto getEventByIdPublic(Long id, HttpServletRequest request) {
+    public EventFullDto getEventByIdPublic(Long id, String url, String ip) {
         log.info(GET_MODEL_BY_ID.getMessage(), id);
         Event event = getEventById(id);
         log.info(GET_MODEL_BY_ID.getMessage(), event);
@@ -356,7 +355,7 @@ public class EventServiceImpl implements EventService {
             fullDto.setViews(views.size());
         }
         // информацию о том, что по этому эндпоинту был осуществлен и обработан запрос, нужно сохранить в сервисе статистики
-        statsClient.saveStats(APP, request.getRequestURI(), request.getRemoteAddr(), LocalDateTime.now());
+        statsClient.saveStats(APP, url, ip, LocalDateTime.now());
         return fullDto;
     }
 }

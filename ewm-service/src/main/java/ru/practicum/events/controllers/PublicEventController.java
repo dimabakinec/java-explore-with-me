@@ -64,8 +64,10 @@ public class PublicEventController {
                 onlyAvailable, sort, from, size);
         log.debug("client ip: {}", request.getRemoteAddr());
         log.debug("endpoint path: {}", request.getRequestURI());
+        String ip = request.getRemoteAddr();
+        String url = request.getRequestURI();
         return eventService.getEventsPublic(text, categories, paid, rangeStart, rangeEnd,
-                onlyAvailable, sortParam, from, size, request);
+                onlyAvailable, sortParam, from, size, url, ip);
     }
 
     @GetMapping("/{id}")
@@ -75,6 +77,9 @@ public class PublicEventController {
         log.debug("Get event by Id {}", id);
         log.debug("client ip: {}", request.getRemoteAddr());
         log.debug("endpoint path: {}", request.getRequestURI());
-        return eventService.getEventByIdPublic(id, request);
+
+        String ip = request.getRemoteAddr();
+        String url = request.getRequestURI();
+        return eventService.getEventByIdPublic(id, url, ip);
     }
 }
