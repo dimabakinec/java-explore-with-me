@@ -204,8 +204,8 @@ public class EventServiceImpl implements EventService {
         return rangeStart;
     }
 
-    private LocalDateTime getRangeEnd(LocalDateTime rangeEnd){
-        if (rangeEnd == null){
+    private LocalDateTime getRangeEnd(LocalDateTime rangeEnd) {
+        if (rangeEnd == null) {
             return LocalDateTime.now();
         }
         return rangeEnd;
