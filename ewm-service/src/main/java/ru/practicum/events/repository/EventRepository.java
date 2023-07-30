@@ -63,11 +63,12 @@ public interface EventRepository extends JpaRepository<Event, Long> {
                     "JOIN FETCH e.initiator " +
                     "JOIN FETCH e.category " +
                     "where e.eventDate > :rangeStart " +
+                    "and (e.eventDate < :rangeEnd) " +
                     "and (:users is null or e.initiator.id in :users) " +
                     "and (:categories is null or e.category.id in :categories) " +
                     "and (:states is null or e.state in :states)"
     )
-    List<Event> findAllForAdmin(List<Long> users, List<EventState> states, List<Long> categories, LocalDateTime rangeStart,
+    List<Event> findAllForAdmin(List<Long> users, List<EventState> states, List<Long> categories, LocalDateTime rangeStart, LocalDateTime rangeEnd,
                                 PageRequest pageable);
 
     List<Event> findAllByIdIn(Set<Long> events);

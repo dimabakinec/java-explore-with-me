@@ -263,12 +263,9 @@ public class EventServiceImpl implements EventService {
         log.info(GET_MODELS.getMessage());
         validDateParam(rangeStart, rangeEnd);
         PageRequest pageable = new PaginationSetup(from, size, Sort.unsorted());
-        List<Event> events = eventRepository.findAllForAdmin(users, states, categories, getRangeStart(rangeStart),
+        // передавать еще 1 параметр
+        List<Event> events = eventRepository.findAllForAdmin(users, states, categories, getRangeStart(rangeStart), getRangeStart(rangeEnd),
                 pageable);
-
-        if (rangeEnd != null) {
-            events = getEventsBeforeRangeEnd(events, rangeEnd);
-        }
         return events.stream()
                 .map(EventMapper::mapToEventFullDto)
                 .collect(Collectors.toList());
