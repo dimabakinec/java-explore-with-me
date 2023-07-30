@@ -206,7 +206,7 @@ public class EventServiceImpl implements EventService {
 
     private LocalDateTime getRangeEnd(LocalDateTime rangeEnd) {
         if (rangeEnd == null) {
-            return LocalDateTime.now();
+            return LocalDateTime.now().plusDays(1000);
         }
         return rangeEnd;
     }
