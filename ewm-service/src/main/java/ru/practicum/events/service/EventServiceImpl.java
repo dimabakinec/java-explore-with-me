@@ -204,6 +204,13 @@ public class EventServiceImpl implements EventService {
         return rangeStart;
     }
 
+    private LocalDateTime getRangeEnd(LocalDateTime rangeEnd){
+        if (rangeEnd == null){
+            return LocalDateTime.now();
+        }
+        return rangeEnd;
+    }
+
     private List<Event> getEventsBeforeRangeEnd(List<Event> events, LocalDateTime rangeEnd) {
         return events.stream().filter(event -> event.getEventDate().isBefore(rangeEnd)).collect(Collectors.toList());
     }
@@ -263,7 +270,7 @@ public class EventServiceImpl implements EventService {
         log.info(GET_MODELS.getMessage());
         validDateParam(rangeStart, rangeEnd);
         PageRequest pageable = new PaginationSetup(from, size, Sort.unsorted());
-        List<Event> events = eventRepository.findAllForAdmin(users, states, categories, getRangeStart(rangeStart), getRangeStart(rangeEnd),
+        List<Event> events = eventRepository.findAllForAdmin(users, states, categories, getRangeStart(rangeStart), getRangeEnd(rangeEnd),
                 pageable);
         return events.stream()
                 .map(EventMapper::mapToEventFullDto)
