@@ -29,7 +29,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             "where e.state = :state " +
             "and e.eventDate > :rangeStart " +
             "and (:categories is null or e.category.id in :categories) " +
-            "and (e.participantLimit = 0 or e.participantLimit > e.confirmedRequests) " +
+//            "and (e.participantLimit = 0 or e.participantLimit > e.confirmedRequests) " +
             "and (:paid is null or e.paid = :paid) " +
             "and (:text is null or (upper(e.annotation) like upper(concat('%', :text, '%'))) " +
             "or (upper(e.description) like upper(concat('%', :text, '%')))" +
@@ -48,7 +48,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
              "and e.eventDate > :rangeStart " +
              "and (:categories is null or e.category.id in :categories) " +
              "and e.participantLimit != 0 " +
-             "and e.participantLimit = e.confirmedRequests " +
+//             "and e.participantLimit = e.confirmedRequests " +
              "and (:paid is null or e.paid = :paid) " +
              "and (:text is null or (upper(e.annotation) like upper(concat('%', :text, '%'))) " +
              "or (upper(e.description) like upper(concat('%', :text, '%'))))"
