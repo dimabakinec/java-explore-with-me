@@ -35,7 +35,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             "or (upper(e.description) like upper(concat('%', :text, '%')))" +
             "or (upper(e.title) like upper(concat('%', :text, '%'))))"
     )
-    List<Event> findAllPublishStateOnlyAvailable(EventState state, LocalDateTime rangeStart,
+    List<Event> findAllPublishStateOnlyNotAvailable(EventState state, LocalDateTime rangeStart,
                                                  List<Long> categories, Boolean paid,
                                                  String text, PaginationSetup pageable);
 
@@ -53,7 +53,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
              "and (:text is null or (upper(e.annotation) like upper(concat('%', :text, '%'))) " +
              "or (upper(e.description) like upper(concat('%', :text, '%'))))"
              )
-    List<Event> findAllPublishStateOnlyNotAvailable(EventState state, LocalDateTime rangeStart,
+    List<Event> findAllPublishStateOnlyAvailable(EventState state, LocalDateTime rangeStart,
                                                     List<Long> categories, Boolean paid,
                                                     String text, PaginationSetup pageable);
 

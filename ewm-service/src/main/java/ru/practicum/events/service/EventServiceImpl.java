@@ -310,10 +310,10 @@ public class EventServiceImpl implements EventService {
             pageable = new PaginationSetup(from, size, Sort.by("eventDate"));
         }
         if (onlyAvailable) { // если параметр onlyAvailable = true
-            events = eventRepository.findAllPublishStateOnlyNotAvailable(state, getRangeStart(rangeStart), categories,
+            events = eventRepository.findAllPublishStateOnlyAvailable(state, getRangeStart(rangeStart), categories,
                     paid, text, pageable);
         } else {
-            events = eventRepository.findAllPublishStateOnlyAvailable(state, getRangeStart(rangeStart), categories,
+            events = eventRepository.findAllPublishStateOnlyNotAvailable(state, getRangeStart(rangeStart), categories,
                     paid, text, pageable);
         }
         if (rangeEnd != null) {
