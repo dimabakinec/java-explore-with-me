@@ -235,6 +235,11 @@ public class EventServiceImpl implements EventService {
         Category category = getCategoryForEvent(eventDto.getCategory());
         Event event = eventRepository.save(mapToNewEvent(eventDto, user, category));
         log.info(SAVE_MODEL.getMessage(), event);
+        EventFullDto dto = mapToEventFullDto(event);
+//        resultDto.setViews(getViews(resultDto));
+//        resultDto.setConfirmedRequests(
+//                participationRequestRepository.getConfirmedRequestsByEventId(event.getId())
+//        );
         return mapToEventFullDto(event);
     }
 
@@ -289,7 +294,11 @@ public class EventServiceImpl implements EventService {
         log.info(UPDATE_MODEL.getMessage(), event);
         event = eventRepository.save(event);
         log.info(SAVE_MODEL.getMessage(), event);
-        return mapToEventFullDto(event);
+        EventFullDto dto = mapToEventFullDto(event);
+        dto.setConfirmedRequests(requestRepository.getConfirmedRequestsByEventId(eventId));
+        return dto;
+
+//        return mapToEventFullDto(event);
     }
 
     @Override
