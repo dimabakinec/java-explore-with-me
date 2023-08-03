@@ -365,4 +365,12 @@ public class EventServiceImpl implements EventService {
         statsClient.saveStats(APP, url, ip, LocalDateTime.now());
         return fullDto;
     }
+//
+//    private void saveСonfirmedRequestsInEvent(List<EventShortDto> result, Map<Long, Long>  confirmedRequestsList) {
+//        result.forEach(eventShortDto -> {
+//            if (confirmedRequestsList.containsKey(eventShortDto.getId())) {
+//                eventShortDto.setСonfirmedRequests(confirmedRequestsList.get(eventShortDto.getId()));
+//            }
+//        });
+//    }
 }

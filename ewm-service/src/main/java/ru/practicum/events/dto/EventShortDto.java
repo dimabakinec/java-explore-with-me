@@ -26,4 +26,7 @@ public class EventShortDto {
     private Boolean paid; // Нужно ли оплачивать участие;
     private String title; // Заголовок;
     private Long views; // Количество просмотров события.
+
+    public void setСonfirmedRequests(Long aLong) {
+    }
 }
