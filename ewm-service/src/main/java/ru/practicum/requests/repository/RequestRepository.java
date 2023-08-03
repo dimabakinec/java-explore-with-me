@@ -1,6 +1,7 @@
 package ru.practicum.requests.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import ru.practicum.requests.model.ParticipationRequest;
 
 import java.util.List;
@@ -18,4 +19,9 @@ public interface RequestRepository extends JpaRepository<ParticipationRequest, L
     Optional<ParticipationRequest> findAllByEventId(Long eventId);
 
     List<ParticipationRequest> findAllByEventIdAndIdIn(Long eventId, Set<Long> requestIds);
+
+    @Query(value = "SELECT COUNT(*) " +
+            "FROM participation_requests " +
+            "WHERE event_id = ?1 and status = 'CONFIRMED'", nativeQuery = true)
+    Integer getConfirmedRequestsByEventId(Long eventId);
 }

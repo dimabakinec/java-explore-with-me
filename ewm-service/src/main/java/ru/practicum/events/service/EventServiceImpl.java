@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.dto.dto.ViewStats;
 import ru.practicum.events.EventState;
 import ru.practicum.events.SortEvents;
+import ru.practicum.requests.repository.RequestRepository;
 import ru.practicum.util.PaginationSetup;
 import ru.practicum.StatsClient;
 import ru.practicum.categories.model.Category;
@@ -45,6 +46,7 @@ public class EventServiceImpl implements EventService {
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
     private final StatsClient statsClient;
+    private final RequestRepository requestRepository;
 
     private void validDate(LocalDateTime eventDate) {
         //дата и время на которые намечено событие не может быть раньше, чем через два часа от текущего момента
@@ -239,7 +241,9 @@ public class EventServiceImpl implements EventService {
     @Override
     public EventFullDto getEventById(Long userId, Long eventId) {
         Event event = getEventByIdAndInitiatorId(eventId, userId);
-        return mapToEventFullDto(event);
+        EventFullDto dto = mapToEventFullDto(event);
+        dto.setConfirmedRequests(requestRepository.getConfirmedRequestsByEventId(eventId));
+        return dto;
     }
 
     @Transactional

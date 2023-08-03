@@ -114,10 +114,10 @@ public class RequestServiceImpl implements RequestService {
         ParticipationRequest newRequest = requestRepository.save(mapToNewParticipationRequest(event, user));
         log.info(SAVE_MODEL.getMessage(), newRequest);
 
-        if (newRequest.getStatus() == CONFIRMED) {
-            event.setConfirmedRequests(event.getConfirmedRequests() + 1);
-            eventRepository.save(event);
-        }
+//        if (newRequest.getStatus() == CONFIRMED) {
+//            event.setConfirmedRequests(event.getConfirmedRequests() + 1);
+//            eventRepository.save(event);
+//        }
         return mapToParticipationRequestDto(newRequest);
     }
 
@@ -132,7 +132,8 @@ public class RequestServiceImpl implements RequestService {
     }
 
     private void validParticipantLimit(Event event) {
-        if (event.getParticipantLimit() > 0 && event.getConfirmedRequests().equals(event.getParticipantLimit())) {
+        int confirmedRequests = requestRepository.getConfirmedRequestsByEventId(event.getId());
+        if (event.getParticipantLimit() > 0 && confirmedRequests  == (event.getParticipantLimit())) {
             throw new ValidateException("The event has reached the limit of participation requests.");
         }
     }
@@ -149,13 +150,13 @@ public class RequestServiceImpl implements RequestService {
     private EventRequestStatusUpdateResult saveConfirmedStatus(List<ParticipationRequest> requests, Event event) {
         // нельзя подтвердить заявку, если уже достигнут лимит по заявкам на данное событие (Ожидается код ошибки 409)
         validParticipantLimit(event);
-        int limitUpdate = event.getParticipantLimit() - event.getConfirmedRequests();
-
+//        int limitUpdate = event.getParticipantLimit() - event.getConfirmedRequests();
+        int limitUpdate = event.getParticipantLimit();
         if (requests.size() <= limitUpdate) {
             requests.forEach(request -> request.setStatus(CONFIRMED));
             requestRepository.saveAll(requests);
-            event.setConfirmedRequests(event.getConfirmedRequests() + requests.size());
-            eventRepository.save(event);
+//            event.setConfirmedRequests(event.getConfirmedRequests() + requests.size());
+//            eventRepository.save(event);
             return new EventRequestStatusUpdateResult(requests
                     .stream()
                     .map(ParticipationRequestMapper::mapToParticipationRequestDto)
@@ -173,8 +174,8 @@ public class RequestServiceImpl implements RequestService {
                 .collect(Collectors.toList());
 
         confirmedRequests.forEach(request -> request.setStatus(CONFIRMED));
-        event.setConfirmedRequests(event.getConfirmedRequests() + confirmedRequests.size());
-        eventRepository.save(event);
+//        event.setConfirmedRequests(event.getConfirmedRequests() + confirmedRequests.size());
+//        eventRepository.save(event);
         requestRepository.saveAll(Stream.of(confirmedRequests, rejectedRequests)
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList()));
