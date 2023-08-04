@@ -1,8 +1,10 @@
 package ru.practicum.events.repository;
 
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import ru.practicum.events.EventState;
 import ru.practicum.util.PaginationSetup;
 import ru.practicum.events.model.Event;
@@ -123,4 +125,18 @@ List<Event> findAllPublishStateOnlyAvailable(
                                 PageRequest pageable);
 
     List<Event> findAllByIdIn(Set<Long> events);
+
+    @Query("select e from Event as e " +
+            "where (upper(e.annotation) like upper(concat('%', :text, '%')) " +
+            "or upper(e.description) like upper(concat('%', :text, '%')) or :text is null) " +
+            "and e.state = :state " +
+            "and (:categories is null or e.category.id in :categories) " +
+            "and (:paid is null or e.paid = :paid) " +
+            "and e.eventDate >= :rangeStart")
+    List<Event> getEventsSort(@Param("text") String text,
+                              @Param("state") EventState state,
+                              @Param("categories") List<Long> categories,
+                              @Param("paid") Boolean paid,
+                              @Param("rangeStart") LocalDateTime rangeStart,
+                              Pageable pageable);
 }

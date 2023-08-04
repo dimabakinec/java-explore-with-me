@@ -330,21 +330,44 @@ public class EventServiceImpl implements EventService {
                                                String url, String ip) {
         log.info(GET_MODELS.getMessage());
         validDateParam(rangeStart, rangeEnd); // проверяем даты
-        PaginationSetup pageable = new PaginationSetup(from, size, Sort.unsorted()); // сортировка
+        String sorting;
+        if (sort.equals(EVENT_DATE)) {
+            sorting = "eventDate";
+        } else if (sort.equals(VIEWS)) {
+            sorting = "views";
+        } else {
+            sorting = "id";
+        }
+
+
+        PageRequest pageRequest = PageRequest.of(from, size, Sort.by(sorting));
+//        PaginationSetup pageable = new PaginationSetup(from, size, Sort.unsorted()); // сортировка
         // это публичный эндпоинт, соответственно в выдаче должны быть только опубликованные события
         final EventState state = PUBLISHED;
-        List<Event> events;
+        List<Event> events = eventRepository.getEventsSort(text, EventState.PUBLISHED, categories, paid, getRangeStart(rangeStart), pageRequest);
 
-        if (sort.equals(EVENT_DATE)) { // если сортировка по дате события
-            pageable = new PaginationSetup(from, size, Sort.by("eventDate"));
+
+//        if (sort.equals(EVENT_DATE)) { // если сортировка по дате события
+//            pageable = new PaginationSetup(from, size, Sort.by("eventDate"));
+//        }
+//        if (onlyAvailable) { // если параметр onlyAvailable = true
+//            events = eventRepository.findAllPublishStateOnlyAvailable(state, getRangeStart(rangeStart), categories,
+//                    paid, text, pageable);
+//        } else {
+//            events = eventRepository.findAllPublishStateOnlyNotAvailable(state, getRangeStart(rangeStart), categories,
+//                    paid, text, pageable);
+//        }
+
+        Map<Long, Integer> eventsParticipantLimit = new HashMap<>();
+        events.forEach(event -> eventsParticipantLimit.put(event.getId(), event.getParticipantLimit()));
+
+        if (onlyAvailable) {
+            events.stream()
+                    .filter(eventShort -> (eventsParticipantLimit.get(eventShort.getId()) == 0 ||
+                            eventsParticipantLimit.get(eventShort.getId()) > requestRepository.getConfirmedRequestsByEventId(eventShort.getId())))
+                    .collect(Collectors.toList());
         }
-        if (onlyAvailable) { // если параметр onlyAvailable = true
-            events = eventRepository.findAllPublishStateOnlyAvailable(state, getRangeStart(rangeStart), categories,
-                    paid, text, pageable);
-        } else {
-            events = eventRepository.findAllPublishStateOnlyNotAvailable(state, getRangeStart(rangeStart), categories,
-                    paid, text, pageable);
-        }
+
         if (rangeEnd != null) {
             events = getEventsBeforeRangeEnd(events, rangeEnd);
         }
