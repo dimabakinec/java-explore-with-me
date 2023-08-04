@@ -361,6 +361,10 @@ public class EventServiceImpl implements EventService {
         if (!event.getState().equals(PUBLISHED)) {
             throw new NotFoundException("Event with id=" + id + " not published");
         }
+
+        // информацию о том, что по этому эндпоинту был осуществлен и обработан запрос, нужно сохранить в сервисе статистики
+        statsClient.saveStats(APP, url, ip, LocalDateTime.now());
+
         EventFullDto fullDto = mapToEventFullDto(event);
 
         // информация о событии должна включать в себя количество просмотров
@@ -370,12 +374,12 @@ public class EventServiceImpl implements EventService {
         if (views != null) {
             fullDto.setViews(views.size());
         }
-        // информацию о том, что по этому эндпоинту был осуществлен и обработан запрос, нужно сохранить в сервисе статистики
-        statsClient.saveStats(APP, url, ip, LocalDateTime.now());
-        EventFullDto dto = mapToEventFullDto(event);
-//        return fullDto;
-        return dto;
+
+//        EventFullDto dto = mapToEventFullDto(event);
+        return fullDto;
+//        return dto;
     }
+
 //
 //    private void saveСonfirmedRequestsInEvent(List<EventShortDto> result, Map<Long, Long>  confirmedRequestsList) {
 //        result.forEach(eventShortDto -> {

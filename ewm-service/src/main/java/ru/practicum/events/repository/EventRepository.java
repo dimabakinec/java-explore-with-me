@@ -75,33 +75,33 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 //    List<Event> findAllPublishStateOnlyAvailable(EventState state, LocalDateTime rangeStart,
 //                                                 List<Long> categories, Boolean paid,
 //                                                 String text, PaginationSetup pageable);
-//@Query(
-//        "SELECT DISTINCT e " +
-//                "FROM Event AS e " +
-//                "JOIN FETCH e.initiator " +
-//                "JOIN FETCH e.category " +
-//                "WHERE e.state = :state " +
-//                "AND e.eventDate > :rangeStart " +
-//                "AND (:categories IS NULL OR e.category.id IN :categories) " +
-//                "AND (:paid IS NULL OR e.paid = :paid) " +
-//                "AND ( " +
-//                "   (:text IS NULL OR UPPER(e.annotation) LIKE UPPER(CONCAT('%', :text, '%'))) " +
-//                "   OR UPPER(e.description) LIKE UPPER(CONCAT('%', :text, '%')) " +
-//                "   OR UPPER(e.title) LIKE UPPER(CONCAT('%', :text, '%')) " +
-//                ") " +
-//                "AND ( " +
-//                "   COALESCE((SELECT COUNT(r.id) FROM ParticipationRequest r WHERE r.event = e AND r.status = 'CONFIRMED'), 0) < e.participantLimit " +
-//                "   OR e.participantLimit = 0 " +
-//                ") " +
-//                "ORDER BY e.createdOn DESC"
-//)
-@Query("select e from Event as e " +
-        "where (upper(e.annotation) like upper(concat('%', :text, '%')) " +
-        "or upper(e.description) like upper(concat('%', :text, '%')) or :text is null) " +
-        "and e.state = :state " +
-        "and (:categories is null or e.category.id in :categories) " +
-        "and (:paid is null or e.paid = :paid) " +
-        "and e.eventDate >= :rangeStart")
+@Query(
+        "SELECT DISTINCT e " +
+                "FROM Event AS e " +
+                "JOIN FETCH e.initiator " +
+                "JOIN FETCH e.category " +
+                "WHERE e.state = :state " +
+                "AND e.eventDate > :rangeStart " +
+                "AND (:categories IS NULL OR e.category.id IN :categories) " +
+                "AND (:paid IS NULL OR e.paid = :paid) " +
+                "AND ( " +
+                "   (:text IS NULL OR UPPER(e.annotation) LIKE UPPER(CONCAT('%', :text, '%'))) " +
+                "   OR UPPER(e.description) LIKE UPPER(CONCAT('%', :text, '%')) " +
+                "   OR UPPER(e.title) LIKE UPPER(CONCAT('%', :text, '%')) " +
+                ") " +
+                "AND ( " +
+                "   COALESCE((SELECT COUNT(r.id) FROM ParticipationRequest r WHERE r.event = e AND r.status = 'CONFIRMED'), 0) < e.participantLimit " +
+                "   OR e.participantLimit = 0 " +
+                ") " +
+                "ORDER BY e.createdOn DESC"
+)
+//@Query("select e from Event as e " +
+//        "where (upper(e.annotation) like upper(concat('%', :text, '%')) " +
+//        "or upper(e.description) like upper(concat('%', :text, '%')) or :text is null) " +
+//        "and e.state = :state " +
+//        "and (:categories is null or e.category.id in :categories) " +
+//        "and (:paid is null or e.paid = :paid) " +
+//        "and e.eventDate >= :rangeStart")
 List<Event> findAllForPublic(
         EventState state, LocalDateTime rangeStart,
         List<Long> categories, Boolean paid,
