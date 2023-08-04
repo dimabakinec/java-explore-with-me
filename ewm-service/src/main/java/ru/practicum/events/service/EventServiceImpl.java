@@ -240,7 +240,7 @@ public class EventServiceImpl implements EventService {
 //        resultDto.setConfirmedRequests(
 //                participationRequestRepository.getConfirmedRequestsByEventId(event.getId())
 //        );
-        return mapToEventFullDto(event);
+        return dto;
     }
 
     @Override
@@ -372,7 +372,9 @@ public class EventServiceImpl implements EventService {
         }
         // информацию о том, что по этому эндпоинту был осуществлен и обработан запрос, нужно сохранить в сервисе статистики
         statsClient.saveStats(APP, url, ip, LocalDateTime.now());
-        return fullDto;
+        EventFullDto dto = mapToEventFullDto(event);
+//        return fullDto;
+        return dto;
     }
 //
 //    private void saveСonfirmedRequestsInEvent(List<EventShortDto> result, Map<Long, Long>  confirmedRequestsList) {
