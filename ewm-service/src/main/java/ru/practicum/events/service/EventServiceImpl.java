@@ -323,7 +323,7 @@ public class EventServiceImpl implements EventService {
             pageable = new PaginationSetup(from, size, Sort.by("eventDate"));
         }
         if (onlyAvailable) { // если параметр onlyAvailable = true
-            events = eventRepository.findAllPublishStateOnlyAvailable(state, getRangeStart(rangeStart), categories,
+            events = eventRepository.findAllForPublic(state, getRangeStart(rangeStart), categories,
                     paid, text, pageable);
         } else {
             events = eventRepository.findAllPublishStateOnlyNotAvailable(state, getRangeStart(rangeStart), categories,
