@@ -236,10 +236,7 @@ public class EventServiceImpl implements EventService {
         Event event = eventRepository.save(mapToNewEvent(eventDto, user, category));
         log.info(SAVE_MODEL.getMessage(), event);
         EventFullDto dto = mapToEventFullDto(event);
-//        resultDto.setViews(getViews(resultDto));
-//        resultDto.setConfirmedRequests(
-//                participationRequestRepository.getConfirmedRequestsByEventId(event.getId())
-//        );
+
         return dto;
     }
 
@@ -267,13 +264,6 @@ public class EventServiceImpl implements EventService {
         log.info(UPDATE_MODEL.getMessage(), event);
         return mapToEventFullDto(eventRepository.save(event));
     }
-//    List<EventFullDto> eventFullDtos = new ArrayList<>();
-//    for (Event event : events) {
-//        EventFullDto eventFullDto = EventMapper.INSTANCE.toEventFullDto(event);
-//        eventFullDto.setConfirmedRequests(getConfirmedRequests(event));
-//        eventFullDtos.add(eventFullDto);
-//    }
-//    return eventFullDtos;
 
     @Override
     public List<EventFullDto> getAllEventsAdmin(List<Long> users,
@@ -294,9 +284,6 @@ public class EventServiceImpl implements EventService {
             EventFullDto eventFullDto = EventMapper.mapToEventFullDto(event);
             eventFullDto.setConfirmedRequests(requestRepository.getConfirmedRequestsByEventId(event.getId()));
             eventFullDtos.add(eventFullDto);
-//        return events.stream()
-//                .map(EventMapper::mapToEventFullDto)
-//                .collect(Collectors.toList());
 
         }
         return eventFullDtos;
@@ -314,7 +301,6 @@ public class EventServiceImpl implements EventService {
         dto.setConfirmedRequests(requestRepository.getConfirmedRequestsByEventId(eventId));
         return dto;
 
-//        return mapToEventFullDto(event);
     }
 
     @Override
@@ -341,22 +327,9 @@ public class EventServiceImpl implements EventService {
 
 
         PageRequest pageRequest = PageRequest.of(from, size, Sort.by(sorting));
-//        PaginationSetup pageable = new PaginationSetup(from, size, Sort.unsorted()); // сортировка
-        // это публичный эндпоинт, соответственно в выдаче должны быть только опубликованные события
+
         final EventState state = PUBLISHED;
         List<Event> events = eventRepository.getEventsSort(text, EventState.PUBLISHED, categories, paid, getRangeStart(rangeStart), pageRequest);
-
-
-//        if (sort.equals(EVENT_DATE)) { // если сортировка по дате события
-//            pageable = new PaginationSetup(from, size, Sort.by("eventDate"));
-//        }
-//        if (onlyAvailable) { // если параметр onlyAvailable = true
-//            events = eventRepository.findAllPublishStateOnlyAvailable(state, getRangeStart(rangeStart), categories,
-//                    paid, text, pageable);
-//        } else {
-//            events = eventRepository.findAllPublishStateOnlyNotAvailable(state, getRangeStart(rangeStart), categories,
-//                    paid, text, pageable);
-//        }
 
         Map<Long, Integer> eventsParticipantLimit = new HashMap<>();
         events.forEach(event -> eventsParticipantLimit.put(event.getId(), event.getParticipantLimit()));
@@ -414,17 +387,8 @@ public class EventServiceImpl implements EventService {
             fullDto.setViews(views.size());
         }
 
-//        EventFullDto dto = mapToEventFullDto(event);
         return fullDto;
-//        return dto;
+
     }
 
-//
-//    private void saveСonfirmedRequestsInEvent(List<EventShortDto> result, Map<Long, Long>  confirmedRequestsList) {
-//        result.forEach(eventShortDto -> {
-//            if (confirmedRequestsList.containsKey(eventShortDto.getId())) {
-//                eventShortDto.setСonfirmedRequests(confirmedRequestsList.get(eventShortDto.getId()));
-//            }
-//        });
-//    }
 }
