@@ -23,41 +23,83 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     // onlyAvailable если false проверяем значение лимит, или равен 0, или согласованных заявок меньше чем лимит.
     @Query(
             "select e " +
-            "from Event AS e " +
-            "JOIN FETCH e.initiator " +
-            "JOIN FETCH e.category " +
-            "where e.state = :state " +
-            "and e.eventDate > :rangeStart " +
-            "and (:categories is null or e.category.id in :categories) " +
+                    "from Event AS e " +
+                    "JOIN FETCH e.initiator " +
+                    "JOIN FETCH e.category " +
+                    "where e.state = :state " +
+                    "and e.eventDate > :rangeStart " +
+                    "and (:categories is null or e.category.id in :categories) " +
 //            "and (e.participantLimit = 0 or e.participantLimit > e.confirmedRequests) " +
 //            "and (e.participantLimit = 0 or e.participantLimit > :confirmedRequests) " +
-            "and (:paid is null or e.paid = :paid) " +
-            "and (:text is null or (upper(e.annotation) like upper(concat('%', :text, '%'))) " +
-            "or (upper(e.description) like upper(concat('%', :text, '%')))" +
-            "or (upper(e.title) like upper(concat('%', :text, '%'))))"
+                    "and (:paid is null or e.paid = :paid) " +
+                    "and (:text is null or (upper(e.annotation) like upper(concat('%', :text, '%'))) " +
+                    "or (upper(e.description) like upper(concat('%', :text, '%')))" +
+                    "or (upper(e.title) like upper(concat('%', :text, '%'))))"
     )
     List<Event> findAllPublishStateOnlyNotAvailable(EventState state, LocalDateTime rangeStart,
-                                                 List<Long> categories, Boolean paid,
-                                                 String text, PaginationSetup pageable);
-
-    @Query(
-             "select e " +
-             "from Event AS e " +
-             "JOIN FETCH e.initiator " +
-             "JOIN FETCH e.category " +
-             "where e.state = :state " +
-             "and e.eventDate > :rangeStart " +
-             "and (:categories is null or e.category.id in :categories) " +
-             "and e.participantLimit != 0 " +
-//             "and e.participantLimit = e.confirmedRequests " +
-//             "and e.participantLimit = :confirmedRequests " +
-             "and (:paid is null or e.paid = :paid) " +
-             "and (:text is null or (upper(e.annotation) like upper(concat('%', :text, '%'))) " +
-             "or (upper(e.description) like upper(concat('%', :text, '%'))))"
-             )
-    List<Event> findAllPublishStateOnlyAvailable(EventState state, LocalDateTime rangeStart,
                                                     List<Long> categories, Boolean paid,
                                                     String text, PaginationSetup pageable);
+
+//    @Query(
+//            "SELECT DISTINCT e " +
+//                    "FROM Event AS e " +
+//                    "JOIN FETCH e.initiator " +
+//                    "JOIN FETCH e.category " +
+//                    "LEFT JOIN (SELECT r.event_id, COUNT(r.id) AS confirmedRequests " +
+//                    "           FROM Request r WHERE r.status = 'CONFIRMED' " +
+//                    "           GROUP BY r.event_id) AS confirmed ON e.id = confirmed.event_id " +
+//                    "WHERE e.state = :state " +
+//                    "AND e.eventDate > :rangeStart " +
+//                    "AND (:categories IS NULL OR e.category.id IN :categories) " +
+//                    "AND (:paid IS NULL OR e.paid = :paid) " +
+//                    "AND (:text IS NULL OR (UPPER(e.annotation) LIKE UPPER(CONCAT('%', :text, '%'))) " +
+//                    "OR (UPPER(e.description) LIKE UPPER(CONCAT('%', :text, '%'))) " +
+//                    "AND (confirmed.confirmedRequests < e.participantLimit OR e.participantLimit = 0) " +
+//                    "ORDER BY e.createdOn DESC"
+//    )
+//    @Query(
+//             "select e " +
+//             "from Event AS e " +
+//             "JOIN FETCH e.initiator " +
+//             "JOIN FETCH e.category " +
+//             "where e.state = :state " +
+//             "and e.eventDate > :rangeStart " +
+//             "and (:categories is null or e.category.id in :categories) " +
+//             "and e.participantLimit != 0 " +
+////             "and e.participantLimit = e.confirmedRequests " +
+////             "and e.participantLimit = :confirmedRequests " +
+//             "and (:paid is null or e.paid = :paid) " +
+//             "and (:text is null or (upper(e.annotation) like upper(concat('%', :text, '%'))) " +
+//             "or (upper(e.description) like upper(concat('%', :text, '%'))))"
+//             )
+//    List<Event> findAllPublishStateOnlyAvailable(EventState state, LocalDateTime rangeStart,
+//                                                 List<Long> categories, Boolean paid,
+//                                                 String text, PaginationSetup pageable);
+@Query(
+        "SELECT DISTINCT e " +
+                "FROM Event AS e " +
+                "JOIN FETCH e.initiator " +
+                "JOIN FETCH e.category " +
+                "WHERE e.state = :state " +
+                "AND e.eventDate > :rangeStart " +
+                "AND (:categories IS NULL OR e.category.id IN :categories) " +
+                "AND (:paid IS NULL OR e.paid = :paid) " +
+                "AND ( " +
+                "   (:text IS NULL OR UPPER(e.annotation) LIKE UPPER(CONCAT('%', :text, '%'))) " +
+                "   OR UPPER(e.description) LIKE UPPER(CONCAT('%', :text, '%')) " +
+                "   OR UPPER(e.title) LIKE UPPER(CONCAT('%', :text, '%')) " +
+                ") " +
+                "AND ( " +
+                "   COALESCE((SELECT COUNT(r.id) FROM ParticipationRequest r WHERE r.event = e AND r.status = 'CONFIRMED'), 0) < e.participantLimit " +
+                "   OR e.participantLimit = 0 " +
+                ") " +
+                "ORDER BY e.createdOn DESC"
+)
+List<Event> findAllPublishStateOnlyAvailable(
+        EventState state, LocalDateTime rangeStart,
+        List<Long> categories, Boolean paid,
+        String text, PaginationSetup pageable
+);
 
     @Query(
             "select e " +
