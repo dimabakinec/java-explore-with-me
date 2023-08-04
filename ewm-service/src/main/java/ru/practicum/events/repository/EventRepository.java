@@ -102,7 +102,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 //        "and (:categories is null or e.category.id in :categories) " +
 //        "and (:paid is null or e.paid = :paid) " +
 //        "and e.eventDate >= :rangeStart")
-List<Event> findAllForPublic(
+List<Event> findAllPublishStateOnlyAvailable(
         EventState state, LocalDateTime rangeStart,
         List<Long> categories, Boolean paid,
         String text, PaginationSetup pageable

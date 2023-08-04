@@ -267,6 +267,13 @@ public class EventServiceImpl implements EventService {
         log.info(UPDATE_MODEL.getMessage(), event);
         return mapToEventFullDto(eventRepository.save(event));
     }
+//    List<EventFullDto> eventFullDtos = new ArrayList<>();
+//    for (Event event : events) {
+//        EventFullDto eventFullDto = EventMapper.INSTANCE.toEventFullDto(event);
+//        eventFullDto.setConfirmedRequests(getConfirmedRequests(event));
+//        eventFullDtos.add(eventFullDto);
+//    }
+//    return eventFullDtos;
 
     @Override
     public List<EventFullDto> getAllEventsAdmin(List<Long> users,
@@ -281,9 +288,18 @@ public class EventServiceImpl implements EventService {
         PageRequest pageable = new PaginationSetup(from, size, Sort.unsorted());
         List<Event> events = eventRepository.findAllForAdmin(users, states, categories, getRangeStart(rangeStart), getRangeEnd(rangeEnd),
                 pageable);
-        return events.stream()
-                .map(EventMapper::mapToEventFullDto)
-                .collect(Collectors.toList());
+
+        List<EventFullDto> eventFullDtos = new ArrayList<>();
+        for (Event event : events) {
+            EventFullDto eventFullDto = EventMapper.mapToEventFullDto(event);
+            eventFullDto.setConfirmedRequests(requestRepository.getConfirmedRequestsByEventId(event.getId()));
+            eventFullDtos.add(eventFullDto);
+//        return events.stream()
+//                .map(EventMapper::mapToEventFullDto)
+//                .collect(Collectors.toList());
+
+        }
+        return eventFullDtos;
     }
 
     @Transactional
@@ -323,7 +339,7 @@ public class EventServiceImpl implements EventService {
             pageable = new PaginationSetup(from, size, Sort.by("eventDate"));
         }
         if (onlyAvailable) { // если параметр onlyAvailable = true
-            events = eventRepository.findAllForPublic(state, getRangeStart(rangeStart), categories,
+            events = eventRepository.findAllPublishStateOnlyAvailable(state, getRangeStart(rangeStart), categories,
                     paid, text, pageable);
         } else {
             events = eventRepository.findAllPublishStateOnlyNotAvailable(state, getRangeStart(rangeStart), categories,
