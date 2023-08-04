@@ -21,7 +21,7 @@ public interface RequestRepository extends JpaRepository<ParticipationRequest, L
     List<ParticipationRequest> findAllByEventIdAndIdIn(Long eventId, Set<Long> requestIds);
 
     @Query(value = "SELECT COUNT(*) " +
-            "FROM participation_requests " +
+            "FROM requests " +
             "WHERE event_id = ?1 and status = 'CONFIRMED'", nativeQuery = true)
     Integer getConfirmedRequestsByEventId(Long eventId);
 }
