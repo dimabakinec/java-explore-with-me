@@ -34,10 +34,10 @@ public class StatController {
     @GetMapping("/stats")
     public Collection<ViewStats> getViewStats(
             // Дата и время начала диапазона за который нужно выгрузить статистику (в формате "yyyy-MM-dd HH:mm:ss")
-            @RequestParam(value = "start") @DateTimeFormat(pattern = DATE_PATTERN) LocalDateTime start,
+            @RequestParam("start") @DateTimeFormat(pattern = DATE_PATTERN) LocalDateTime start,
 
             // Дата и время конца диапазона за который нужно выгрузить статистику (в формате "yyyy-MM-dd HH:mm:ss")
-            @RequestParam(value = "end") @DateTimeFormat(pattern = DATE_PATTERN) LocalDateTime end,
+            @RequestParam("end") @DateTimeFormat(pattern = DATE_PATTERN) LocalDateTime end,
 
             // Список uri для которых нужно выгрузить статистику, необязательный параметр.
             @RequestParam(defaultValue = "") List<String> uris,

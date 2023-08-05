@@ -27,11 +27,4 @@ public class ErrorHandler {
         log.error("Код ошибки: {}, {}", HttpStatus.BAD_REQUEST, e.getMessage());
         return Map.of("error", e.getMessage());
     }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public Map<String, String> handleException(final Throwable exception) {
-        log.error("Код ошибки: {}, {}", HttpStatus.INTERNAL_SERVER_ERROR, exception.getMessage());
-        return Map.of("error", exception.getMessage());
-    }
 }
