@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.dto.dto.ViewStats;
 import ru.practicum.events.EventState;
 import ru.practicum.events.SortEvents;
+import ru.practicum.requests.EventRequestStatus;
 import ru.practicum.requests.repository.RequestRepository;
 import ru.practicum.util.PaginationSetup;
 import ru.practicum.StatsClient;
@@ -278,11 +279,25 @@ public class EventServiceImpl implements EventService {
         PageRequest pageable = new PaginationSetup(from, size, Sort.unsorted());
         List<Event> events = eventRepository.findAllForAdmin(users, states, categories, getRangeStart(rangeStart), getRangeEnd(rangeEnd),
                 pageable);
-
+// -----------------------------------------------------
         List<EventFullDto> eventFullDtos = new ArrayList<>();
+// ----->> добавили этот код
+        Map<Long, Integer> requestsList = requestRepository.findByEventIdInAndStatus(
+                eventsParticipantLimit.keySet(),
+                EventRequestStatus.CONFIRMED)).stream()
+                .collect(Collectors.toMap(NewDto::getId, NewDto::getHit));
+// -------------->>>> меняем цикл
+
+//        for (Event event : events) {
+//            EventFullDto eventFullDto = EventMapper.mapToEventFullDto(event);
+//            eventFullDto.setConfirmedRequests(requestRepository.getConfirmedRequestsByEventId(event.getId()));
+//            eventFullDtos.add(eventFullDto);
+//
+//        }
+
         for (Event event : events) {
             EventFullDto eventFullDto = EventMapper.mapToEventFullDto(event);
-            eventFullDto.setConfirmedRequests(requestRepository.getConfirmedRequestsByEventId(event.getId()));
+            eventFullDto.setConfirmedRequests(requestsList.get(event.getId()));
             eventFullDtos.add(eventFullDto);
 
         }
@@ -333,11 +348,25 @@ public class EventServiceImpl implements EventService {
 
         Map<Long, Integer> eventsParticipantLimit = new HashMap<>();
         events.forEach(event -> eventsParticipantLimit.put(event.getId(), event.getParticipantLimit()));
+// ----->> добавили этот код
+        Map<Long, Integer> requestsList = requestRepository.findByEventIdInAndStatus(
+                eventsParticipantLimit.keySet(),
+                EventRequestStatus.CONFIRMED)).stream()
+                .collect(Collectors.toMap(NewDto::getId, NewDto::getHit));
 
+        // --------->>> заменили код ниже
+//        if (onlyAvailable) {
+//            Long id;
+//            Long countRequst;
+//            events.stream()
+//                    .filter(eventShort -> (eventsParticipantLimit.get(eventShort.getId()) == 0 ||
+//                            eventsParticipantLimit.get(eventShort.getId()) > requestRepository.getConfirmedRequestsByEventId(eventShort.getId())))
+//                    .collect(Collectors.toList());
+//        }
         if (onlyAvailable) {
             events.stream()
                     .filter(eventShort -> (eventsParticipantLimit.get(eventShort.getId()) == 0 ||
-                            eventsParticipantLimit.get(eventShort.getId()) > requestRepository.getConfirmedRequestsByEventId(eventShort.getId())))
+                            eventsParticipantLimit.get(eventShort.getId()) > requestsList.get(eventShort.getId())))
                     .collect(Collectors.toList());
         }
 

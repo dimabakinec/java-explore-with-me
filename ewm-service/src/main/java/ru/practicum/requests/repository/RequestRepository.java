@@ -2,6 +2,8 @@ package ru.practicum.requests.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import ru.practicum.events.dto.NewDto;
+import ru.practicum.requests.EventRequestStatus;
 import ru.practicum.requests.model.ParticipationRequest;
 
 import java.util.List;
@@ -24,4 +26,7 @@ public interface RequestRepository extends JpaRepository<ParticipationRequest, L
             "FROM requests " +
             "WHERE event_id = ?1 and status = 'CONFIRMED'", nativeQuery = true)
     Integer getConfirmedRequestsByEventId(Long eventId);
+
+    List<NewDto> findByEventIdInAndStatus(Set<Long> longs, EventRequestStatus eventRequestStatus);
+
 }
