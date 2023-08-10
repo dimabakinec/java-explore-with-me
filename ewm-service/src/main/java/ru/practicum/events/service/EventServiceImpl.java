@@ -285,7 +285,7 @@ public class EventServiceImpl implements EventService {
         Map<Long, Integer> requestsList = requestRepository.findByEventIdInAndStatus(
                 eventsParticipantLimit.keySet(),
                 EventRequestStatus.CONFIRMED)).stream()
-                .collect(Collectors.toMap(NewDto::getId, NewDto::getHit));
+                .collect(Collectors.toMap(NewDto::getId, NewDto::getCountRequest));
 // -------------->>>> меняем цикл
 // решение 1го замечания
 //        for (Event event : events) {
@@ -352,7 +352,7 @@ public class EventServiceImpl implements EventService {
         Map<Long, Integer> requestsList = requestRepository.findByEventIdInAndStatus(
                 eventsParticipantLimit.keySet(),
                 EventRequestStatus.CONFIRMED)).stream()
-                .collect(Collectors.toMap(NewDto::getId, NewDto::getHit));
+                .collect(Collectors.toMap(NewDto::getId, NewDto::getCountRequest));
 
         // --------->>> заменили код ниже
         // решение 2й ошибки
