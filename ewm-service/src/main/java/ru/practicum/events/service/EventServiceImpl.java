@@ -280,33 +280,12 @@ public class EventServiceImpl implements EventService {
         PageRequest pageable = new PaginationSetup(from, size, Sort.unsorted());
         List<Event> events = eventRepository.findAllForAdmin(users, states, categories, getRangeStart(rangeStart), getRangeEnd(rangeEnd),
                 pageable);
-// -----------------------------------------------------
         List<EventFullDto> eventFullDtos = new ArrayList<>();
-// ----->> добавили этот код
         Set<Long> eventIds = events.stream().map(Event::getId).collect(Collectors.toSet());
         Map<Long, Long> requestsList = requestRepository.findByEventIdInAndStatus(
                         eventIds,
                         EventRequestStatus.CONFIRMED).stream()
                 .collect(Collectors.toMap(RequestShort::getId, RequestShort::getCountRequest));
-
-//        List<NewDto> requestList = requestRepository.findByEventIdInAndStatus(
-//                eventsParticipantLimit.keySet(),
-//                EventRequestStatus.CONFIRMED);
-//        Map<Long, Integer> requestsCountByIdEvent = requestList.stream()
-//                .collect(Collectors.toMap(NewDto::getId, NewDto::getCountRequest));
-
-//        Map<Long, Integer> requestsList = requestRepository.findByEventIdInAndStatus(
-//                eventsParticipantLimit.keySet(),
-//                EventRequestStatus.CONFIRMED).stream()
-//                .collect(Collectors.toMap(NewDto::getId, NewDto::getCountRequest));
-// -------------->>>> меняем цикл
-// решение 1го замечания
-//        for (Event event : events) {
-//            EventFullDto eventFullDto = EventMapper.mapToEventFullDto(event);
-//            eventFullDto.setConfirmedRequests(requestRepository.getConfirmedRequestsByEventId(event.getId()));
-//            eventFullDtos.add(eventFullDto);
-//
-//        }
 
         for (Event event : events) {
             EventFullDto eventFullDto = EventMapper.mapToEventFullDto(event);
@@ -355,7 +334,6 @@ public class EventServiceImpl implements EventService {
             sorting = "id";
         }
 
-
         PageRequest pageRequest = PageRequest.of(from, size, Sort.by(sorting));
 
         final EventState state = PUBLISHED;
@@ -369,23 +347,7 @@ public class EventServiceImpl implements EventService {
                 EventRequestStatus.CONFIRMED);
         Map<Long, Long> requestsCountByIdEvent = requestList.stream()
                 .collect(Collectors.toMap(RequestShort::getId, RequestShort::getCountRequest));
-// ----->> добавили этот код
-//        Map<Long, Integer> requestsList = requestRepository.findByEventIdInAndStatus(
-//                eventsParticipantLimit.keySet(),
-//                EventRequestStatus.CONFIRMED)).stream()
-//                .collect(Collectors.toMap(NewDto::getId, NewDto::getCountRequest));
 
-        // --------->>> заменили код ниже
-        // решение 2й ошибки
-
-//        if (onlyAvailable) {
-//            Long id;
-//            Long countRequst;
-//            events.stream()
-//                    .filter(eventShort -> (eventsParticipantLimit.get(eventShort.getId()) == 0 ||
-//                            eventsParticipantLimit.get(eventShort.getId()) > requestRepository.getConfirmedRequestsByEventId(eventShort.getId())))
-//                    .collect(Collectors.toList());
-//        }
         if (onlyAvailable) {
             events.stream()
                     .filter(eventShort -> (eventsParticipantLimit.get(eventShort.getId()) == 0 ||
