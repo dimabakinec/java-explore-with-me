@@ -287,7 +287,7 @@ public class EventServiceImpl implements EventService {
                 EventRequestStatus.CONFIRMED)).stream()
                 .collect(Collectors.toMap(NewDto::getId, NewDto::getHit));
 // -------------->>>> меняем цикл
-
+// решение 1го замечания
 //        for (Event event : events) {
 //            EventFullDto eventFullDto = EventMapper.mapToEventFullDto(event);
 //            eventFullDto.setConfirmedRequests(requestRepository.getConfirmedRequestsByEventId(event.getId()));
@@ -355,6 +355,8 @@ public class EventServiceImpl implements EventService {
                 .collect(Collectors.toMap(NewDto::getId, NewDto::getHit));
 
         // --------->>> заменили код ниже
+        // решение 2й ошибки
+
 //        if (onlyAvailable) {
 //            Long id;
 //            Long countRequst;
