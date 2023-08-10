@@ -7,7 +7,5 @@ import lombok.*;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class NewDto {
-    private Long id;
-    private Integer countRequest;
+public class RequestStat {
 }

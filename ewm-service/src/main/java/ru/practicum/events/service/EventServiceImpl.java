@@ -284,7 +284,7 @@ public class EventServiceImpl implements EventService {
 // ----->> добавили этот код
         Map<Long, Integer> requestsList = requestRepository.findByEventIdInAndStatus(
                 eventsParticipantLimit.keySet(),
-                EventRequestStatus.CONFIRMED)).stream()
+                EventRequestStatus.CONFIRMED).stream()
                 .collect(Collectors.toMap(NewDto::getId, NewDto::getCountRequest));
 // -------------->>>> меняем цикл
 // решение 1го замечания
@@ -348,11 +348,17 @@ public class EventServiceImpl implements EventService {
 
         Map<Long, Integer> eventsParticipantLimit = new HashMap<>();
         events.forEach(event -> eventsParticipantLimit.put(event.getId(), event.getParticipantLimit()));
-// ----->> добавили этот код
-        Map<Long, Integer> requestsList = requestRepository.findByEventIdInAndStatus(
+
+        List<NewDto> requestList = requestRepository.findByEventIdInAndStatus(
                 eventsParticipantLimit.keySet(),
-                EventRequestStatus.CONFIRMED)).stream()
+                EventRequestStatus.CONFIRMED);
+        Map<Long, Integer> requestsCountByIdEvent = requestList.stream()
                 .collect(Collectors.toMap(NewDto::getId, NewDto::getCountRequest));
+// ----->> добавили этот код
+//        Map<Long, Integer> requestsList = requestRepository.findByEventIdInAndStatus(
+//                eventsParticipantLimit.keySet(),
+//                EventRequestStatus.CONFIRMED)).stream()
+//                .collect(Collectors.toMap(NewDto::getId, NewDto::getCountRequest));
 
         // --------->>> заменили код ниже
         // решение 2й ошибки
@@ -368,7 +374,7 @@ public class EventServiceImpl implements EventService {
         if (onlyAvailable) {
             events.stream()
                     .filter(eventShort -> (eventsParticipantLimit.get(eventShort.getId()) == 0 ||
-                            eventsParticipantLimit.get(eventShort.getId()) > requestsList.get(eventShort.getId())))
+                            eventsParticipantLimit.get(eventShort.getId()) > requestsCountByIdEvent.get(eventShort.getId())))
                     .collect(Collectors.toList());
         }
 
