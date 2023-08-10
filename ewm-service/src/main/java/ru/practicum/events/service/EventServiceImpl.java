@@ -282,10 +282,22 @@ public class EventServiceImpl implements EventService {
 // -----------------------------------------------------
         List<EventFullDto> eventFullDtos = new ArrayList<>();
 // ----->> добавили этот код
+        Set<Long> eventIds = events.stream().map(Event::getId).collect(Collectors.toSet());
         Map<Long, Integer> requestsList = requestRepository.findByEventIdInAndStatus(
-                eventsParticipantLimit.keySet(),
-                EventRequestStatus.CONFIRMED).stream()
+                        eventIds,
+                        EventRequestStatus.CONFIRMED).stream()
                 .collect(Collectors.toMap(NewDto::getId, NewDto::getCountRequest));
+
+//        List<NewDto> requestList = requestRepository.findByEventIdInAndStatus(
+//                eventsParticipantLimit.keySet(),
+//                EventRequestStatus.CONFIRMED);
+//        Map<Long, Integer> requestsCountByIdEvent = requestList.stream()
+//                .collect(Collectors.toMap(NewDto::getId, NewDto::getCountRequest));
+
+//        Map<Long, Integer> requestsList = requestRepository.findByEventIdInAndStatus(
+//                eventsParticipantLimit.keySet(),
+//                EventRequestStatus.CONFIRMED).stream()
+//                .collect(Collectors.toMap(NewDto::getId, NewDto::getCountRequest));
 // -------------->>>> меняем цикл
 // решение 1го замечания
 //        for (Event event : events) {
