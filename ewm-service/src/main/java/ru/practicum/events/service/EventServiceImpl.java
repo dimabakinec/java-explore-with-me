@@ -10,6 +10,7 @@ import ru.practicum.dto.dto.ViewStats;
 import ru.practicum.events.EventState;
 import ru.practicum.events.SortEvents;
 import ru.practicum.requests.EventRequestStatus;
+import ru.practicum.requests.model.RequestShort;
 import ru.practicum.requests.repository.RequestRepository;
 import ru.practicum.util.PaginationSetup;
 import ru.practicum.StatsClient;
@@ -283,10 +284,10 @@ public class EventServiceImpl implements EventService {
         List<EventFullDto> eventFullDtos = new ArrayList<>();
 // ----->> добавили этот код
         Set<Long> eventIds = events.stream().map(Event::getId).collect(Collectors.toSet());
-        Map<Long, Integer> requestsList = requestRepository.findByEventIdInAndStatus(
+        Map<Long, Long> requestsList = requestRepository.findByEventIdInAndStatus(
                         eventIds,
                         EventRequestStatus.CONFIRMED).stream()
-                .collect(Collectors.toMap(NewDto::getId, NewDto::getCountRequest));
+                .collect(Collectors.toMap(RequestShort::getId, RequestShort::getCountRequest));
 
 //        List<NewDto> requestList = requestRepository.findByEventIdInAndStatus(
 //                eventsParticipantLimit.keySet(),
@@ -361,11 +362,11 @@ public class EventServiceImpl implements EventService {
         Map<Long, Integer> eventsParticipantLimit = new HashMap<>();
         events.forEach(event -> eventsParticipantLimit.put(event.getId(), event.getParticipantLimit()));
 
-        List<NewDto> requestList = requestRepository.findByEventIdInAndStatus(
+        List<RequestShort> requestList = requestRepository.findByEventIdInAndStatus(
                 eventsParticipantLimit.keySet(),
                 EventRequestStatus.CONFIRMED);
-        Map<Long, Integer> requestsCountByIdEvent = requestList.stream()
-                .collect(Collectors.toMap(NewDto::getId, NewDto::getCountRequest));
+        Map<Long, Long> requestsCountByIdEvent = requestList.stream()
+                .collect(Collectors.toMap(RequestShort::getId, RequestShort::getCountRequest));
 // ----->> добавили этот код
 //        Map<Long, Integer> requestsList = requestRepository.findByEventIdInAndStatus(
 //                eventsParticipantLimit.keySet(),

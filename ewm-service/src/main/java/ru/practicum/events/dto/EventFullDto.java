@@ -28,7 +28,7 @@ public class EventFullDto {
     private Location location; // Широта и долгота места проведения события;
     private boolean paid; // Нужно ли оплачивать участие;
     private int participantLimit; // Ограничение на количество участников;
-    private int confirmedRequests; // Количество одобренных заявок на участие в данном событии;
+    private long confirmedRequests; // Количество одобренных заявок на участие в данном событии;
     private long views; // Количество просмотров события.
     private EventState state; // Список состояний жизненного цикла события;
 
