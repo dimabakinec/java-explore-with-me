@@ -310,7 +310,9 @@ public class EventServiceImpl implements EventService {
 
         for (Event event : events) {
             EventFullDto eventFullDto = EventMapper.mapToEventFullDto(event);
-            eventFullDto.setConfirmedRequests(requestsList.get(event.getId()));
+            if (requestsList.get(event.getId()) != null) {
+                eventFullDto.setConfirmedRequests(requestsList.get(event.getId()));
+            }
             eventFullDtos.add(eventFullDto);
 
         }
