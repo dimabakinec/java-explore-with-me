@@ -1,178 +1,12 @@
 {
 	"info": {
-		"_postman_id": "dcb3c1bf-c64d-4eb6-afa5-49e56e64bca0",
+		"_postman_id": "f24d29c7-1629-426b-989c-6fb24cdc7070",
 		"name": "Test Explore With Me - Feature Copy",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "26417195"
+		"_exporter_id": "25786035",
+		"_collection_link": "https://martian-astronaut-962484.postman.co/workspace/Team-Workspace~45b4ec42-5d2c-466c-8cb4-cbb6a96edadd/collection/25786035-f24d29c7-1629-426b-989c-6fb24cdc7070?action=share&source=collection_link&creator=25786035"
 	},
 	"item": [
-		{
-			"name": "Добавление комментария к несуществующему событию",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Ответ должен содержать код статуса 404 и данные в формате json\", function () {\r",
-							"    pm.response.to.have.status(404);  \r",
-							"    pm.response.to.be.withBody;\r",
-							"    pm.response.to.be.json;\r",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:8080/users/:userId/comments?eventId=106",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"users",
-						":userId",
-						"comments"
-					],
-					"query": [
-						{
-							"key": "eventId",
-							"value": "106"
-						}
-					],
-					"variable": [
-						{
-							"key": "userId",
-							"value": "136"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Добавление комментария несуществующим пользователем",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Ответ должен содержать код статуса 404 и данные в формате json\", function () {\r",
-							"    pm.response.to.have.status(404);  \r",
-							"    pm.response.to.be.withBody;\r",
-							"    pm.response.to.be.json;\r",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:8080/users/:userId/comments?eventId=106",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"users",
-						":userId",
-						"comments"
-					],
-					"query": [
-						{
-							"key": "eventId",
-							"value": "106"
-						}
-					],
-					"variable": [
-						{
-							"key": "userId",
-							"value": "136"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Обновление несуществующего комментария",
-			"event": [
-				{
-					"listen": "prerequest",
-					"script": {
-						"exec": [
-							""
-						],
-						"type": "text/javascript"
-					}
-				},
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Ответ должен содержать код статуса 404 и данные в формате json\", function () {\r",
-							"    pm.response.to.have.status(404);  \r",
-							"    pm.response.to.be.withBody;\r",
-							"    pm.response.to.be.json;\r",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "PATCH",
-				"header": [
-					{
-						"key": "Accept",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"text\" : \"Хорошо погуляли\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:8080/users/:userId/comments/:commentId",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"users",
-						":userId",
-						"comments",
-						":commentId"
-					],
-					"variable": [
-						{
-							"key": "userId",
-							"value": "136"
-						},
-						{
-							"key": "commentId",
-							"value": "1"
-						}
-					]
-				},
-				"description": "Обратите внимание:\n - дата начала события должна быть не ранее чем за час от даты публикации.\n- событие должно быть в состоянии ожидания публикации"
-			},
-			"response": []
-		},
 		{
 			"name": "Добавление нового пользователя",
 			"event": [
@@ -374,6 +208,102 @@
 			"response": []
 		},
 		{
+			"name": "Добавление нового комментария для несуществующего события",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Ответ должен содержать код статуса 404 и данные в формате json\", function () {\r",
+							"    pm.response.to.have.status(404);  \r",
+							"    pm.response.to.be.withBody;\r",
+							"    pm.response.to.be.json;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/users/:userId/comments?eventId=999",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users",
+						":userId",
+						"comments"
+					],
+					"query": [
+						{
+							"key": "eventId",
+							"value": "999"
+						}
+					],
+					"variable": [
+						{
+							"key": "userId",
+							"value": "136"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Добавление нового комментария от несуществующего пользователя",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Ответ должен содержать код статуса 404 и данные в формате json\", function () {\r",
+							"    pm.response.to.have.status(404);  \r",
+							"    pm.response.to.be.withBody;\r",
+							"    pm.response.to.be.json;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/users/:userId/comments?eventId=106",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users",
+						":userId",
+						"comments"
+					],
+					"query": [
+						{
+							"key": "eventId",
+							"value": "106"
+						}
+					],
+					"variable": [
+						{
+							"key": "userId",
+							"value": "999"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Добавление нового комментария",
 			"event": [
 				{
@@ -424,6 +354,100 @@
 						{
 							"key": "userId",
 							"value": "136"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Обновление несуществующего комментария",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Ответ должен содержать код статуса 404 и данные в формате json\", function () {\r",
+							"    pm.response.to.have.status(404);  \r",
+							"    pm.response.to.be.withBody;\r",
+							"    pm.response.to.be.json;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/users/:userId/comments/:commentId",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users",
+						":userId",
+						"comments",
+						":commentId"
+					],
+					"variable": [
+						{
+							"key": "userId",
+							"value": "136"
+						},
+						{
+							"key": "commentId",
+							"value": "999"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Обновление комментария от несуществующего пользователя",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Ответ должен содержать код статуса 404 и данные в формате json\", function () {\r",
+							"    pm.response.to.have.status(404);  \r",
+							"    pm.response.to.be.withBody;\r",
+							"    pm.response.to.be.json;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/users/:userId/comments/:commentId",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users",
+						":userId",
+						"comments",
+						":commentId"
+					],
+					"variable": [
+						{
+							"key": "userId",
+							"value": "999"
+						},
+						{
+							"key": "commentId",
+							"value": "1"
 						}
 					]
 				}
@@ -503,6 +527,53 @@
 			"response": []
 		},
 		{
+			"name": "Поиск несуществующего комментария",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Ответ должен содержать код статуса 404 и данные в формате json\", function () {\r",
+							"    pm.response.to.have.status(404);  \r",
+							"    pm.response.to.be.withBody;\r",
+							"    pm.response.to.be.json;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/users/:userId/comments/:commentId",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users",
+						":userId",
+						"comments",
+						":commentId"
+					],
+					"variable": [
+						{
+							"key": "userId",
+							"value": "136"
+						},
+						{
+							"key": "commentId",
+							"value": "999"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Получение комментария по id",
 			"event": [
 				{
@@ -543,6 +614,54 @@
 						{
 							"key": "commentId",
 							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Получение всех комментариев несуществующего пользователя",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Ответ должен содержать код статуса 404 и данные в формате json\", function () {\r",
+							"    pm.response.to.have.status(404);  \r",
+							"    pm.response.to.be.withBody;\r",
+							"    pm.response.to.be.json;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/users/:userId/comments?eventId=106",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users",
+						":userId",
+						"comments"
+					],
+					"query": [
+						{
+							"key": "eventId",
+							"value": "106"
+						}
+					],
+					"variable": [
+						{
+							"key": "userId",
+							"value": "999"
 						}
 					]
 				}
@@ -598,6 +717,54 @@
 			"response": []
 		},
 		{
+			"name": "Получение всех комментариев несуществующего события",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Ответ должен содержать код статуса 404 и данные в формате json\", function () {\r",
+							"    pm.response.to.have.status(404);  \r",
+							"    pm.response.to.be.withBody;\r",
+							"    pm.response.to.be.json;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/users/:userId/comments/events/:eventId",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users",
+						":userId",
+						"comments",
+						"events",
+						":eventId"
+					],
+					"variable": [
+						{
+							"key": "userId",
+							"value": "136"
+						},
+						{
+							"key": "eventId",
+							"value": "999"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Получение всех комментариев события",
 			"event": [
 				{
@@ -639,6 +806,53 @@
 						{
 							"key": "eventId",
 							"value": "106"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Удаление несуществующего комментария",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Ответ должен содержать код статуса 404 и данные в формате json\", function () {\r",
+							"    pm.response.to.have.status(404);  \r",
+							"    pm.response.to.be.withBody;\r",
+							"    pm.response.to.be.json;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/users/:userId/comments/:commentId",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users",
+						":userId",
+						"comments",
+						":commentId"
+					],
+					"variable": [
+						{
+							"key": "userId",
+							"value": "136"
+						},
+						{
+							"key": "commentId",
+							"value": "999"
 						}
 					]
 				}
