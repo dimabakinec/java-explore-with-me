@@ -51,6 +51,17 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    @Transactional
+    public CommentDto updateCommentByAdmin(Long commentId, NewCommentDto commentDto) {
+        final Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new NotFoundException("Комментарий с идентификатором : " + commentId + " не найден"));
+
+        comment.setText(commentDto.getText());
+        return CommentMapper.toCommentDto(commentRepository.save(comment));
+    }
+
+
+    @Override
     public CommentDto getCommentById(Long userId, Long commentId) {
         checkUser(userId);
         return CommentMapper.toCommentDto(commentRepository.findById(commentId)
@@ -81,10 +92,22 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     public void deleteComment(Long userId, Long commentId) {
         checkUser(userId);
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new NotFoundException("Комментарий с идентификатором : " + commentId + " не найден"));
+        if (!comment.getAuthor().getId().equals(userId)) {
+            throw new NotFoundException("Вы не являетесь автором");
+        }
+        commentRepository.deleteById(commentId);
+    }
+
+    @Override
+    @Transactional
+    public void deleteCommentByAdmin(Long commentId) {
         if (!commentRepository.existsById(commentId))
             throw new NotFoundException("Комментарий с идентификатором : " + commentId + " не найден");
         commentRepository.deleteById(commentId);
     }
+
 
     private void checkUser(Long userId) {
         if (!userRepository.existsById(userId)) {
