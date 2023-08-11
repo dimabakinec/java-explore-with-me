@@ -43,9 +43,6 @@ public class CommentServiceImpl implements CommentService {
         checkUser(userId);
         final Comment comment = commentRepository.findByIdAndAuthorId(commentId, userId)
                 .orElseThrow(() -> new NotFoundException("Комментарий с идентификатором : " + commentId + " не найден"));
-
-//        final Comment comment = commentRepository.findById(commentId)
-//                .orElseThrow(() -> new NotFoundException("Комментарий с идентификатором : " + commentId + " не найден"));
         comment.setText(commentDto.getText());
         return CommentMapper.toCommentDto(commentRepository.save(comment));
     }
@@ -108,15 +105,10 @@ public class CommentServiceImpl implements CommentService {
         commentRepository.deleteById(commentId);
     }
 
-
     private void checkUser(Long userId) {
         if (!userRepository.existsById(userId)) {
             throw new NotFoundException("Пользователь с идентификатором : " + userId + " не найден");
         }
     }
-//
-//    private void checkComment(Long commentId) {
-//        if (!commentRepository.existsById(commentId))
-//            throw new NotFoundException("Комментарий с идентификатором : " + commentId + " не найден");
-//    }
+
 }
