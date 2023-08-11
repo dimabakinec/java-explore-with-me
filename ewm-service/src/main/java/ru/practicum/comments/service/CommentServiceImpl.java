@@ -39,9 +39,13 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional
     public CommentDto updateComment(Long userId, Long commentId, NewCommentDto commentDto) {
+        //А комментарий может отредактировать кто угодно, даже не автор? Будет логично проверять авторство оригинального комментария
         checkUser(userId);
-        final Comment comment = commentRepository.findById(commentId)
+        final Comment comment = commentRepository.findByIdAndAuthorId(commentId, userId)
                 .orElseThrow(() -> new NotFoundException("Комментарий с идентификатором : " + commentId + " не найден"));
+
+//        final Comment comment = commentRepository.findById(commentId)
+//                .orElseThrow(() -> new NotFoundException("Комментарий с идентификатором : " + commentId + " не найден"));
         comment.setText(commentDto.getText());
         return CommentMapper.toCommentDto(commentRepository.save(comment));
     }
@@ -87,9 +91,9 @@ public class CommentServiceImpl implements CommentService {
             throw new NotFoundException("Пользователь с идентификатором : " + userId + " не найден");
         }
     }
-
-    private void checkComment(Long commentId) {
-        if (!commentRepository.existsById(commentId))
-            throw new NotFoundException("Комментарий с идентификатором : " + commentId + " не найден");
-    }
+//
+//    private void checkComment(Long commentId) {
+//        if (!commentRepository.existsById(commentId))
+//            throw new NotFoundException("Комментарий с идентификатором : " + commentId + " не найден");
+//    }
 }
