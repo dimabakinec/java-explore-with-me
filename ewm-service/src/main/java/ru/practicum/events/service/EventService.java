@@ -30,4 +30,6 @@ public interface EventService {
                                         Integer size, String url, String ip);
 
     EventFullDto getEventByIdPublic(Long id, String url, String ip);
+
+
 }

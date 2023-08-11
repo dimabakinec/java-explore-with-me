@@ -75,6 +75,12 @@
             <scope>compile</scope>
         </dependency>
 
+        <dependency>
+            <groupId>com.querydsl</groupId>
+            <artifactId>querydsl-jpa</artifactId>
+            <classifier>jakarta</classifier>
+        </dependency>
+
     </dependencies>
 
     <build>

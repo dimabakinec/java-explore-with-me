@@ -9,6 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.dto.dto.ViewStats;
 import ru.practicum.events.EventState;
 import ru.practicum.events.SortEvents;
+import ru.practicum.requests.EventRequestStatus;
+import ru.practicum.requests.model.RequestShort;
 import ru.practicum.requests.repository.RequestRepository;
 import ru.practicum.util.PaginationSetup;
 import ru.practicum.StatsClient;
@@ -278,11 +280,18 @@ public class EventServiceImpl implements EventService {
         PageRequest pageable = new PaginationSetup(from, size, Sort.unsorted());
         List<Event> events = eventRepository.findAllForAdmin(users, states, categories, getRangeStart(rangeStart), getRangeEnd(rangeEnd),
                 pageable);
-
         List<EventFullDto> eventFullDtos = new ArrayList<>();
+        Set<Long> eventIds = events.stream().map(Event::getId).collect(Collectors.toSet());
+        Map<Long, Long> requestsList = requestRepository.findByEventIdInAndStatus(
+                        eventIds,
+                        EventRequestStatus.CONFIRMED).stream()
+                .collect(Collectors.toMap(RequestShort::getId, RequestShort::getCountRequest));
+
         for (Event event : events) {
             EventFullDto eventFullDto = EventMapper.mapToEventFullDto(event);
-            eventFullDto.setConfirmedRequests(requestRepository.getConfirmedRequestsByEventId(event.getId()));
+            if (requestsList.get(event.getId()) != null) {
+                eventFullDto.setConfirmedRequests(requestsList.get(event.getId()));
+            }
             eventFullDtos.add(eventFullDto);
 
         }
@@ -325,7 +334,6 @@ public class EventServiceImpl implements EventService {
             sorting = "id";
         }
 
-
         PageRequest pageRequest = PageRequest.of(from, size, Sort.by(sorting));
 
         final EventState state = PUBLISHED;
@@ -334,10 +342,16 @@ public class EventServiceImpl implements EventService {
         Map<Long, Integer> eventsParticipantLimit = new HashMap<>();
         events.forEach(event -> eventsParticipantLimit.put(event.getId(), event.getParticipantLimit()));
 
+        List<RequestShort> requestList = requestRepository.findByEventIdInAndStatus(
+                eventsParticipantLimit.keySet(),
+                EventRequestStatus.CONFIRMED);
+        Map<Long, Long> requestsCountByIdEvent = requestList.stream()
+                .collect(Collectors.toMap(RequestShort::getId, RequestShort::getCountRequest));
+
         if (onlyAvailable) {
             events.stream()
                     .filter(eventShort -> (eventsParticipantLimit.get(eventShort.getId()) == 0 ||
-                            eventsParticipantLimit.get(eventShort.getId()) > requestRepository.getConfirmedRequestsByEventId(eventShort.getId())))
+                            eventsParticipantLimit.get(eventShort.getId()) > requestsCountByIdEvent.get(eventShort.getId())))
                     .collect(Collectors.toList());
         }
 
