@@ -7,6 +7,8 @@ import ru.practicum.comments.dto.CommentDto;
 import ru.practicum.comments.dto.NewCommentDto;
 import ru.practicum.comments.service.CommentService;
 
+import javax.validation.Valid;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -16,9 +18,8 @@ public class CommentAdminController {
 
     private final CommentService commentService;
 
-
     @PatchMapping("/{commentId}")
-    public CommentDto updateCommentByAdmin(@PathVariable Long commentId, @RequestBody NewCommentDto newCommentDto) {
+    public CommentDto updateCommentByAdmin(@PathVariable Long commentId, @RequestBody @Valid NewCommentDto newCommentDto) {
         return commentService.updateCommentByAdmin(commentId, newCommentDto);
     }
 
